@@ -782,13 +782,23 @@ class Dte extends \sasco\LibreDTE\PDF
             $this->MultiTexto($receptor['Extranjero']['NumId'], $x+$offset+2);
         }
         $contacto = [];
-        // Para boletas usar TelefonoRecep según esquema, para otros documentos usar Contacto
-        if (!empty($receptor['TelefonoRecep']))
-            $contacto[] = $receptor['TelefonoRecep'];
-        elseif (!empty($receptor['Contacto']))
-            $contacto[] = $receptor['Contacto'];
-        if (!empty($receptor['CorreoRecep']))
-            $contacto[] = $receptor['CorreoRecep'];
+        // Para boletas (39, 41): mostrar teléfono y correo en contacto
+        $tipoDTE = !empty($Encabezado['IdDoc']['TipoDTE']) ? $Encabezado['IdDoc']['TipoDTE'] : 0;
+        if (in_array($tipoDTE, [39, 41])) {
+            // Para boletas, agregar TelefonoRecep o Contacto si existen
+            if (!empty($receptor['TelefonoRecep']))
+                $contacto[] = $receptor['TelefonoRecep'];
+            elseif (!empty($receptor['Contacto']))
+                $contacto[] = $receptor['Contacto'];
+            if (!empty($receptor['CorreoRecep']))
+                $contacto[] = $receptor['CorreoRecep'];
+        } else {
+            // Para otros documentos, mantener comportamiento original
+            if (!empty($receptor['Contacto']))
+                $contacto[] = $receptor['Contacto'];
+            if (!empty($receptor['CorreoRecep']))
+                $contacto[] = $receptor['CorreoRecep'];
+        }
         if (!empty($contacto)) {
             $this->setFont('', 'B', null);
             $this->Texto('Contacto', $x);

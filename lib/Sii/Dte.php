@@ -1768,12 +1768,6 @@ class Dte
         $datos['Encabezado']['Emisor']['CdgVendedor'] = false;
         $datos['Encabezado']['Receptor']['GiroRecep'] = false;
         
-        // Convertir Contacto a TelefonoRecep para boletas según esquema EnvioBOLETA_v11.xsd
-        if (!empty($datos['Encabezado']['Receptor']['Contacto'])) {
-            $datos['Encabezado']['Receptor']['TelefonoRecep'] = $datos['Encabezado']['Receptor']['Contacto'];
-            $datos['Encabezado']['Receptor']['Contacto'] = false;
-        }
-        
         // COMENTADO: No agregar correo a referencias según esquema EnvioBOLETA_v11.xsd
         // CorreoRecep debe permanecer en el receptor
         // if (!empty($datos['Encabezado']['Receptor']['CorreoRecep'])) {
