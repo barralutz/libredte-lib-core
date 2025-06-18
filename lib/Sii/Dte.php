@@ -681,6 +681,7 @@ class Dte
                     'GiroRecep' => false,
                     'Contacto' => false,
                     'CorreoRecep' => false,
+                    'TelefonoRecep' => false,  // Agregar aquí en el orden correcto
                     'DirRecep' => false,
                     'CmnaRecep' => false,
                     'CiudadRecep' => false,
