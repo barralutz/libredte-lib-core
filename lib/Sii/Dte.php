@@ -1754,6 +1754,29 @@ class Dte
      */
     private function normalizar_boletas(array &$datos)
     {
+        // Para boletas: Si hay CorreoRecep o TelefonoRecep, asegurar que Contacto exista
+        if (!empty($datos['Encabezado']['Receptor'])) {
+            $receptor = &$datos['Encabezado']['Receptor'];
+            
+            // Si hay CorreoRecep o TelefonoRecep pero no Contacto, agregar Contacto
+            if ((isset($receptor['CorreoRecep']) || isset($receptor['TelefonoRecep'])) && 
+                !isset($receptor['Contacto'])) {
+                // Usar el teléfono como Contacto si existe, sino dejar vacío
+                if (!empty($receptor['TelefonoRecep'])) {
+                    $receptor['Contacto'] = $receptor['TelefonoRecep'];
+                    // Opcionalmente, eliminar TelefonoRecep para evitar redundancia
+                    unset($receptor['TelefonoRecep']);
+                } elseif (!empty($receptor['Telefono'])) {
+                    // Si viene como 'Telefono' en lugar de 'TelefonoRecep'
+                    $receptor['Contacto'] = $receptor['Telefono'];
+                    unset($receptor['Telefono']);
+                } else {
+                    // Si no hay teléfono pero hay correo, poner el correo en Contacto
+                    $receptor['Contacto'] = $receptor['CorreoRecep'];
+                }
+            }
+        }
+        
         // Reordenar campos del receptor según esquema EnvioBOLETA_v11.xsd
         if (!empty($datos['Encabezado']['Receptor'])) {
             $receptor_ordenado = [];
