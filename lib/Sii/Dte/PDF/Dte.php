@@ -782,7 +782,10 @@ class Dte extends \sasco\LibreDTE\PDF
             $this->MultiTexto($receptor['Extranjero']['NumId'], $x+$offset+2);
         }
         $contacto = [];
-        if (!empty($receptor['Contacto']))
+        // Para boletas usar TelefonoRecep según esquema, para otros documentos usar Contacto
+        if (!empty($receptor['TelefonoRecep']))
+            $contacto[] = $receptor['TelefonoRecep'];
+        elseif (!empty($receptor['Contacto']))
             $contacto[] = $receptor['Contacto'];
         if (!empty($receptor['CorreoRecep']))
             $contacto[] = $receptor['CorreoRecep'];

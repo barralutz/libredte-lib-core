@@ -1767,13 +1767,23 @@ class Dte
         $datos['Encabezado']['Emisor']['CorreoEmisor'] = false;
         $datos['Encabezado']['Emisor']['CdgVendedor'] = false;
         $datos['Encabezado']['Receptor']['GiroRecep'] = false;
-        if (!empty($datos['Encabezado']['Receptor']['CorreoRecep'])) {
-            $datos['Referencia'][] = [
-                'NroLinRef' => !empty($datos['Referencia']) ? (count($datos['Referencia'])+1) : 1,
-                'RazonRef' => mb_substr('Email receptor: '.$datos['Encabezado']['Receptor']['CorreoRecep'], 0, 90),
-            ];
+        
+        // Convertir Contacto a TelefonoRecep para boletas según esquema EnvioBOLETA_v11.xsd
+        if (!empty($datos['Encabezado']['Receptor']['Contacto'])) {
+            $datos['Encabezado']['Receptor']['TelefonoRecep'] = $datos['Encabezado']['Receptor']['Contacto'];
+            $datos['Encabezado']['Receptor']['Contacto'] = false;
         }
-        $datos['Encabezado']['Receptor']['CorreoRecep'] = false;
+        
+        // COMENTADO: No agregar correo a referencias según esquema EnvioBOLETA_v11.xsd
+        // CorreoRecep debe permanecer en el receptor
+        // if (!empty($datos['Encabezado']['Receptor']['CorreoRecep'])) {
+        //     $datos['Referencia'][] = [
+        //         'NroLinRef' => !empty($datos['Referencia']) ? (count($datos['Referencia'])+1) : 1,
+        //         'RazonRef' => mb_substr('Email receptor: '.$datos['Encabezado']['Receptor']['CorreoRecep'], 0, 90),
+        //     ];
+        // }
+        // MANTENER CorreoRecep en el receptor según el esquema
+        // $datos['Encabezado']['Receptor']['CorreoRecep'] = false;
         // quitar otros tags que no son parte de las boletas
         $datos['Encabezado']['IdDoc']['FmaPago'] = false;
         $datos['Encabezado']['IdDoc']['FchCancel'] = false;
