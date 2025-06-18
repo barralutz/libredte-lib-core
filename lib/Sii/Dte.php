@@ -1754,6 +1754,31 @@ class Dte
      */
     private function normalizar_boletas(array &$datos)
     {
+        // Reordenar campos del receptor según esquema EnvioBOLETA_v11.xsd
+        if (!empty($datos['Encabezado']['Receptor'])) {
+            $receptor_ordenado = [];
+            $orden_campos = [
+                'RUTRecep',
+                'CdgIntRecep', 
+                'RznSocRecep',
+                'Contacto',
+                'CorreoRecep',
+                'TelefonoRecep',
+                'DirRecep',
+                'CmnaRecep',
+                'CiudadRecep',
+                'DirPostal',
+                'CmnaPostal',
+                'CiudadPostal'
+            ];
+            foreach ($orden_campos as $campo) {
+                if (isset($datos['Encabezado']['Receptor'][$campo])) {
+                    $receptor_ordenado[$campo] = $datos['Encabezado']['Receptor'][$campo];
+                }
+            }
+            $datos['Encabezado']['Receptor'] = $receptor_ordenado;
+        }
+        
         // cambiar tags de DTE a boleta si se pasaron
         if ($datos['Encabezado']['Emisor']['RznSoc']) {
             $datos['Encabezado']['Emisor']['RznSocEmisor'] = $datos['Encabezado']['Emisor']['RznSoc'];
